@@ -7,3 +7,5 @@ geckodriver.log
 venv/**
 drivers/**
 
+**/__pycache__/**
+

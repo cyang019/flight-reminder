@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.sql import select
 from datetime import datetime
 
+
 Base = declarative_base()
 dbname = 'flights'
 engine = create_engine(f'sqlite:///{dbname}.sqlite3')
@@ -52,11 +53,11 @@ def insert_to_db(dbname, date, flight_number, flight_fare,
   session.flush()
   session.close()
 
-def select_all(dbname):
+def select_all(tablename):
   # engine = create_engine(f'sqlite:///{dbname}.sqlite3')
   # Session = sessionmaker(bind=engine)
   with engine.connect() as con:
-    result_proxy = con.execute(f'SELECT * FROM {dbname}')
+    result_proxy = con.execute(f'SELECT * FROM {tablename}')
     result = [row for row in result_proxy]
   return result
 
