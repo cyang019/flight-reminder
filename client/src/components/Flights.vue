@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     getAvailableFlights () {
-      const path = 'http://localhost:5000/all_flights'
+      const path = 'http://127.0.0.1:5000/all_flights'
       axios.get(path)
         .then((res) => {
           this.flights = res.data
@@ -38,8 +38,11 @@ export default {
   },
   created () {
     setInterval(() => {
-      this.getAvailableFlights()
-    }, 2 * 1000)
+      this.getAvailableFlights()    
+    }, 10 * 1000)
+  },
+  mounted () {
+    this.getAvailableFlights()
   }
 }
 </script>

@@ -11,6 +11,7 @@ import numpy as np
 from datetime import datetime
 from scanner.common import send_keys_delay_random
 from flights_db import insert_to_db
+from flight_message_alert import alert_on_valuable_flight, alert_on_valuable_flight_test
 import re
 
 
@@ -23,27 +24,27 @@ def search_korean_air_once(driver, orig, dest, date):
             oneWayRadioBtn = driver.find_element_by_xpath('//*[@id="oneway"]')
             oneWayRadioBtn.click()
         except Exception as e:
-            time.sleep(np.random.uniform(low=3, high=7))
+            time.sleep(np.random.uniform(low=4, high=8))
             cnt += 1
         else:
             break
     time.sleep(1)
 
     def fill_bookflight_form():
-        time.sleep(0.6)
+        time.sleep(1.6)
         fromInput = driver.find_element_by_xpath('//*[@id="from-to-chooser"]/div[2]/ul/li/div/div/div/input')
         fromInput.clear()
-        time.sleep(0.7)
+        time.sleep(1.7)
         send_keys_delay_random(fromInput, orig)
 
         toInput = driver.find_element_by_xpath('//*[@id="from-to-chooser"]/div[2]/ul/li[2]/div/div/div/input')
         toInput.clear()
-        time.sleep(0.3)
+        time.sleep(1.3)
         send_keys_delay_random(toInput, dest)
 
         dateInput = driver.find_element_by_xpath('//*[@id="from-to-chooser"]/div[2]/ul/li[3]/div/input')
         dateInput.clear()
-        time.sleep(0.9)
+        time.sleep(1.9)
         send_keys_delay_random(dateInput, date)
         time.sleep(1.2)
     
@@ -64,7 +65,7 @@ def search_korean_air_once(driver, orig, dest, date):
         try:
             print('form contains incorrect entries, try to fill again...')
             fill_bookflight_form()
-            time.sleep(1)
+            time.sleep(2)
         except Exception as e:
             print(e)
             raise e
@@ -77,10 +78,11 @@ def search_korean_air_once(driver, orig, dest, date):
     # airMessageCheckBox.click()
     # time.sleep(0.521)
     airMessageConfirmBtn = driver.find_element_by_xpath('//*[@id="btnModalPopupYes"]')
+    time.sleep(2)
     airMessageConfirmBtn.click()
     time.sleep(1.6)
     cnt = 0
-    while cnt < 10:
+    while cnt < 5:
         notFoundMessageBtnExist = driver.find_elements_by_xpath('//*[@id="btnModalPopupYes"]')
         if not notFoundMessageBtnExist:
             cnt += 1
@@ -94,6 +96,7 @@ def search_korean_air_once(driver, orig, dest, date):
         return True
     else:
         notFoundMessageBtn = notFoundMessageBtnExist[0]
+        time.sleep(2.0)
         notFoundMessageBtn.click()
         return False
 
@@ -116,21 +119,21 @@ def search_korean_air_second_round(driver, orig, dest, date):
         time.sleep(2)
         fromInput = driver.find_element_by_xpath('//*[@id="boundList"]/ul/li[1]/div/div/div/input')
         fromInput.clear()
-        time.sleep(0.7)
+        time.sleep(1.5)
         send_keys_delay_random(fromInput, orig)
         time.sleep(1.1)
         
         toInput = driver.find_element_by_xpath('//*[@id="boundList"]/ul/li[2]/div/div/div/input')
         toInput.clear()
-        time.sleep(0.91)
+        time.sleep(1.91)
         send_keys_delay_random(toInput, dest)
-        time.sleep(0.21)
+        time.sleep(1.2)
         
         dateInput = driver.find_element_by_xpath('//*[@id="boundList"]/ul/li[3]/div/input')
         dateInput.clear()
-        time.sleep(0.9)
+        time.sleep(1.6)
         send_keys_delay_random(dateInput, date)
-        time.sleep(1)
+        time.sleep(1.5)
         try:
             currencyUSDRadioBtn = driver.find_element_by_xpath('//*[@id="currency_USD"]')
             currencyUSDRadioBtn.click()
@@ -156,7 +159,7 @@ def search_korean_air_second_round(driver, orig, dest, date):
         try:
             print('form contains incorrect entries, try to fill again...')
             fill_bookflight_form()
-            time.sleep(1)
+            time.sleep(2)
         except Exception as e:
             print(e)
             raise e
@@ -164,13 +167,14 @@ def search_korean_air_second_round(driver, orig, dest, date):
     submitBtn = driver.find_element_by_xpath('//*[@id="submit"]')
     submitBtn.click()
     
-    time.sleep(1.1)
+    time.sleep(1.5)
     # //*[@id="btnModalPopupYes"]
     airMessageConfirmBtn = driver.find_element_by_xpath('//*[@id="btnModalPopupYes"]')
+    time.sleep(2)
     airMessageConfirmBtn.click()
-    time.sleep(1.6)
+    time.sleep(2.6)
     cnt = 0
-    while cnt < 10:
+    while cnt < 5:
         notFoundMessageBtnExist = driver.find_elements_by_xpath('//*[@id="btnModalPopupYes"]')
         if not notFoundMessageBtnExist:
             cnt += 1
@@ -182,8 +186,10 @@ def search_korean_air_second_round(driver, orig, dest, date):
         t = datetime.now().strftime("%d-%b-%Y (%H:%M:%S.%f)")
         print("[{}] Found flight for {}-{} on {}.".format(t, orig, dest, date))
         return True
+        time.sleep(1)
     else:
         notFoundMessageBtn = notFoundMessageBtnExist[0]
+        time.sleep(2.0)
         notFoundMessageBtn.click()
         return False
 
@@ -269,7 +275,7 @@ def get_korean_air_flight_info(driver, orig, dest, date):
                 break
             except NoSuchElementException as e:
                 print(col.text)
-                time.sleep(0.1)
+                time.sleep(1.0)
     try:
         continueBtn = driver.find_element_by_xpath('/html/body/div[3]/div/div/div[2]/button')
         # continueBtn.click()
@@ -324,19 +330,21 @@ def search_korean_air_date_range(orig, dest, dates, db_name):
         except NoSuchElementException as e:
             pass
     results = []
-    firstRound = True
+    # firstRound = True
     for i, date in enumerate(dates):
-        time.sleep(np.random.uniform(low=2, high=6))
         params = {
             'orig': orig,
             'dest': dest,
             'date': date
         }
-        if i == 0 or firstRound:
-            found = search_korean_air_once(driver, **params)
-            firstRound = False
-        else:
-            found = search_korean_air_second_round(driver, **params)
+        driver.get(url)
+        time.sleep(1)
+        found = search_korean_air_once(driver, **params)
+        # if i == 0 or firstRound:
+        #     found = search_korean_air_once(driver, **params)
+        #     firstRound = False
+        # else:
+        #     found = search_korean_air_second_round(driver, **params)
         if found:
             result = get_korean_air_flight_info(driver, **params)
             if len(result) > 0:
@@ -344,10 +352,15 @@ def search_korean_air_date_range(orig, dest, dates, db_name):
                     print(f"{line['date']} {line['flight_number']} {line['flight_fare']}")
                     insert_to_db(db_name, **line)
                     print(f'flight saved to {db_name} db')
-            firstRound = True
-            driver.get(url)
+            # firstRound = True
+            time.sleep(60)
+            # driver.get(url)
         else:
             print(f'did not find {orig} to {dest} for {date}...')
+            time.sleep(6)
+        alert_on_valuable_flight()
+        time.sleep(np.random.uniform(low=120, high=300))
+        # alert_on_valuable_flight_test()
     driver.quit()
     return
 

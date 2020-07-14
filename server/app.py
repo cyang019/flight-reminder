@@ -34,6 +34,10 @@ def get_all_flights():
     cur.close()
     return jsonify(rv)
 
+@app.route('/', methods=['GET'])
+def description():
+  return "<h1>Get Flight Information</h1>"
+
 
 if __name__ == '__main__':
   app.run()

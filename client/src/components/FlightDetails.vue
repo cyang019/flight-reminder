@@ -41,7 +41,7 @@
         {{plane}}
       </li>
       <li class="list-group-item bg-light">
-        <small>Ticket found at {{foundTime}}</small>
+        <small>Last updated: {{foundTime}}</small>
       </li>
     </ul>
   </div>

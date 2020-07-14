@@ -1,6 +1,9 @@
 import os
 from scanner.airlines import search_korean_air_date_range
-from flights_db import create_db
+from flights_db import create_db, select_july_aug_sep
+from email_sender import create_n_send_message
+import time
+import numpy as np
 
 FRIDAYS = [
   '2020-07-17', '2020-07-24', '2020-07-31',
@@ -26,6 +29,8 @@ def scan():
   }
   while True:
     search_korean_air_date_range(**params)
+    # alert_on_valuable_flight()
+    time.sleep(np.random.uniform(low=60, high=240))
   
 
 def main():
