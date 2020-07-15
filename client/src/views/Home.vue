@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1>Available Flights</h1>
+    <h1>航班动态</h1>
     <flights/>
   </div>
 </template>
