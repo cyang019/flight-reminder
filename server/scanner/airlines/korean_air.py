@@ -353,13 +353,13 @@ def search_korean_air_date_range(orig, dest, dates, db_name):
                     insert_to_db(db_name, **line)
                     print(f'flight saved to {db_name} db')
             # firstRound = True
-            time.sleep(60)
+            time.sleep(np.random.uniform(low=60, high=120))
             # driver.get(url)
         else:
             print(f'did not find {orig} to {dest} for {date}...')
             time.sleep(6)
         alert_on_valuable_flight()
-        time.sleep(np.random.uniform(low=120, high=300))
+        time.sleep(np.random.uniform(low=120, high=180))
         # alert_on_valuable_flight_test()
     driver.quit()
     return
